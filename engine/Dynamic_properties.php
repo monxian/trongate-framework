@@ -39,7 +39,7 @@ trait Dynamic_properties {
             return $this->model;
         } elseif (!isset($this->attributes[$key])) {
             $class_name = ucfirst($key);
-            $this->$key = new $key;
+            $this->$key = new $class_name;
         }
         return $this->attributes[$key];
     }
