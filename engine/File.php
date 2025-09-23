@@ -426,30 +426,23 @@ class File
     }
 
     /**
-     * Validates the upload destination path and ensures it exists and is accessible.
-     *
-     * @param string $destination The target upload directory path
-     * @param bool $upload_to_module Whether to upload to a module's assets directory (default: false)
-     * @param string $target_module The target module name if uploading to module (default: '')
-     * 
-     * @throws Exception If:
-     *                   - Destination is empty
-     *                   - Target path is not a directory
-     *                   - Path validation fails for non-module uploads
-     * 
-     * @return void
-     */
-    private function validate_upload_path(string $destination, bool $upload_to_module = false, string $target_module = ''): void
-    {
-
+    * Validates the upload destination path and ensures it exists and is accessible.
+    *
+    * @param string $destination The target upload directory path
+    * @param bool $upload_to_module Whether to upload to a module's assets directory (default: false)
+    * @param string $target_module The target module name if uploading to module (default: '')
+    * 
+    * @throws Exception If:
+    *                   - Destination is empty
+    *                   - Target path is not a directory
+    *                   - Path validation fails for non-module uploads
+    * 
+    * @return void
+    */
+    private function validate_upload_path(string $destination, bool $upload_to_module = false, string $target_module = ''): void {
         if (empty($destination)) {
             throw new Exception('Upload destination not specified');
         }
-
-        // Converts a submodule name like 'accounts-comments' 
-        // into a path format 'accounts/comments'
-        $target_module = str_replace('-', '/', $target_module);
-
 
         if ($upload_to_module === true) {
             $target_path = '../modules/' . $target_module . '/assets/' . $destination;
