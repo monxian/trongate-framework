@@ -11,7 +11,8 @@
  * Users of this class are advised to be aware of the security implications associated with file handling in a web environment,
  * particularly to ensure that operations do not inadvertently expose sensitive application areas.
  */
-class File {
+class File
+{
 
     /**
      * Handles the file upload process with specified configuration.
@@ -33,7 +34,8 @@ class File {
      * @throws Exception If the upload fails due to invalid configuration, file upload errors,
      *                   security validation failures, or file movement issues.
      */
-    public function upload(array $config): array {
+    public function upload(array $config): array
+    {
         try {
             // Validate basic config
             $destination = $config['destination'] ?? null;
@@ -63,7 +65,7 @@ class File {
             $file_info = $this->generate_secure_filename($upload['name'], $make_rand_name);
 
             // Set target path
-            $target_path = $upload_to_module ? 
+            $target_path = $upload_to_module ?
                 '../modules/' . $target_module . '/assets/' . $destination :
                 $destination;
 
@@ -89,23 +91,24 @@ class File {
     }
 
     /**
-    * Generate a unique file path by appending incremental numbers if the file already exists.
-    *
-    * @param string $directory The target directory path
-    * @param string $base_name The base filename without extension
-    * @param string $extension The file extension including the dot (e.g. '.jpg')
-    * 
-    * @return string The unique file path that does not exist in the directory
-    */
-    private function ensure_unique_path(string $directory, string $base_name, string $extension): string {
+     * Generate a unique file path by appending incremental numbers if the file already exists.
+     *
+     * @param string $directory The target directory path
+     * @param string $base_name The base filename without extension
+     * @param string $extension The file extension including the dot (e.g. '.jpg')
+     * 
+     * @return string The unique file path that does not exist in the directory
+     */
+    private function ensure_unique_path(string $directory, string $base_name, string $extension): string
+    {
         $counter = 1;
         $final_path = $directory . '/' . $base_name . $extension;
-        
+
         while (file_exists($final_path)) {
             $final_path = $directory . '/' . $base_name . '_' . $counter . $extension;
             $counter++;
         }
-        
+
         return $final_path;
     }
 
@@ -120,7 +123,8 @@ class File {
      * @return array Returns an array with file metadata.
      * @throws Exception if the file does not exist.
      */
-    public function info(string $file_path): array {
+    public function info(string $file_path): array
+    {
         if (!file_exists($file_path)) {
             throw new Exception("The file does not exist: $file_path");
         }
@@ -154,7 +158,8 @@ class File {
      * @return bool Returns true if the directory was created successfully, or if it already exists.
      * @throws Exception if the directory cannot be created.
      */
-    public function create_directory(string $directory_path, int $permissions = 0755, bool $recursive = true): bool {
+    public function create_directory(string $directory_path, int $permissions = 0755, bool $recursive = true): bool
+    {
         if (file_exists($directory_path)) {
             return true;
         }
@@ -177,7 +182,8 @@ class File {
      * @param string $path The path to the file or directory.
      * @return bool Returns true if the file or directory exists, otherwise false.
      */
-    public function exists(string $path): bool {
+    public function exists(string $path): bool
+    {
         return file_exists($path);
     }
 
@@ -188,7 +194,8 @@ class File {
      * @return string Returns the contents of the file.
      * @throws Exception If the file does not exist or cannot be read.
      */
-    public function read(string $file_path): string {
+    public function read(string $file_path): string
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($file_path)) {
@@ -216,7 +223,8 @@ class File {
      * @return bool Returns true on successful write, false on failure.
      * @throws Exception If there is an error writing to the file.
      */
-    public function write(string $file_path, $data, bool $append = false): bool {
+    public function write(string $file_path, $data, bool $append = false): bool
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($file_path)) {
@@ -242,7 +250,8 @@ class File {
      * @return bool Returns true if the file is successfully deleted.
      * @throws Exception If the file does not exist or the deletion fails.
      */
-    public function delete(string $file_path): bool {
+    public function delete(string $file_path): bool
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($file_path)) {
@@ -271,7 +280,8 @@ class File {
      * @throws Exception If the file does not exist or cannot be read.
      * @return void
      */
-    public function download(string $file_path, bool $as_attachment = true): void {
+    public function download(string $file_path, bool $as_attachment = true): void
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($file_path)) {
@@ -327,7 +337,8 @@ class File {
      * @throws Exception If the specified directory does not exist or is not a directory.
      * @return array An array of file and directory names from the specified directory.
      */
-    public function list_directory(string $directory_path, bool $recursive = false): array {
+    public function list_directory(string $directory_path, bool $recursive = false): array
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($directory_path)) {
@@ -368,7 +379,8 @@ class File {
      * @return bool Returns true on success, or false on failure.
      * @throws Exception if the source file does not exist or the copy fails.
      */
-    public function copy(string $source_path, string $destination_path): bool {
+    public function copy(string $source_path, string $destination_path): bool
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($source_path)) {
@@ -394,7 +406,8 @@ class File {
      * @return bool Returns true on success, or false on failure.
      * @throws Exception if the source file does not exist or the move fails.
      */
-    public function move(string $source_path, string $destination_path): bool {
+    public function move(string $source_path, string $destination_path): bool
+    {
 
         // Validate the path to ensure it's allowed based on predefined security rules
         if (!$this->is_path_valid($source_path)) {
@@ -413,23 +426,30 @@ class File {
     }
 
     /**
-    * Validates the upload destination path and ensures it exists and is accessible.
-    *
-    * @param string $destination The target upload directory path
-    * @param bool $upload_to_module Whether to upload to a module's assets directory (default: false)
-    * @param string $target_module The target module name if uploading to module (default: '')
-    * 
-    * @throws Exception If:
-    *                   - Destination is empty
-    *                   - Target path is not a directory
-    *                   - Path validation fails for non-module uploads
-    * 
-    * @return void
-    */
-    private function validate_upload_path(string $destination, bool $upload_to_module = false, string $target_module = ''): void {
+     * Validates the upload destination path and ensures it exists and is accessible.
+     *
+     * @param string $destination The target upload directory path
+     * @param bool $upload_to_module Whether to upload to a module's assets directory (default: false)
+     * @param string $target_module The target module name if uploading to module (default: '')
+     * 
+     * @throws Exception If:
+     *                   - Destination is empty
+     *                   - Target path is not a directory
+     *                   - Path validation fails for non-module uploads
+     * 
+     * @return void
+     */
+    private function validate_upload_path(string $destination, bool $upload_to_module = false, string $target_module = ''): void
+    {
+
         if (empty($destination)) {
             throw new Exception('Upload destination not specified');
         }
+
+        // Converts a submodule name like 'accounts-comments' 
+        // into a path format 'accounts/comments'
+        $target_module = str_replace('-', '/', $target_module);
+
 
         if ($upload_to_module === true) {
             $target_path = '../modules/' . $target_module . '/assets/' . $destination;
@@ -448,29 +468,30 @@ class File {
     }
 
     /**
-    * Generates a secure filename for an uploaded file, either randomized or based on original name.
-    *
-    * @param string $original_name The original filename from the upload
-    * @param bool $make_rand_name Whether to generate a random filename (default: false)
-    * 
-    * @return array{
-    *    name: string,           The base filename without extension
-    *    extension: string,      The lowercase file extension
-    *    full_name: string      The complete filename with extension
-    * }
-    */
-    private function generate_secure_filename(string $original_name, bool $make_rand_name): array {
+     * Generates a secure filename for an uploaded file, either randomized or based on original name.
+     *
+     * @param string $original_name The original filename from the upload
+     * @param bool $make_rand_name Whether to generate a random filename (default: false)
+     * 
+     * @return array{
+     *    name: string,           The base filename without extension
+     *    extension: string,      The lowercase file extension
+     *    full_name: string      The complete filename with extension
+     * }
+     */
+    private function generate_secure_filename(string $original_name, bool $make_rand_name): array
+    {
         $file_info = return_file_info($original_name);
-        
+
         if ($make_rand_name === true) {
             $file_name = strtolower(make_rand_str(10));
         } else {
-            $file_name = url_title($file_info['file_name']); 
+            $file_name = url_title($file_info['file_name']);
         }
-        
+
         // Whitelist of allowed extensions could be added here
         $extension = strtolower($file_info['file_extension']);
-        
+
         return [
             'name' => $file_name,
             'extension' => $extension,
@@ -491,13 +512,14 @@ class File {
      * @param string $path The file or directory path to validate.
      * @return bool Returns true if the path is valid, false otherwise.
      */
-    private function is_path_valid(string $path): bool {
+    private function is_path_valid(string $path): bool
+    {
         $restricted_dirs = [APPPATH . 'config', APPPATH . 'engine', APPPATH . 'templates'];
-        
+
         // If the path exists, validate it directly
         if (file_exists($path)) {
             $normalized_path = realpath($path);
-            
+
             // Check if the path is in a restricted directory
             foreach ($restricted_dirs as $dir) {
                 $restricted_real_path = realpath($dir);
@@ -505,36 +527,36 @@ class File {
                     return false; // Path is inside a restricted directory
                 }
             }
-            
+
             // Prevent manipulation of any files or directories directly under APPPATH
             $relative_path = str_replace(realpath(APPPATH), '', $normalized_path);
             if (strpos($relative_path, DIRECTORY_SEPARATOR) === false) {
                 return false; // Path is directly under the root directory
             }
-            
+
             // Ensure the path is within the application directory to avoid external access
             if (strpos($normalized_path, realpath(APPPATH)) !== 0) {
                 return false;
             }
-            
+
             return true;
-        } 
-        
+        }
+
         // If the path doesn't exist, validate its parent directory
         else {
             // Get the parent directory path
             $parent_path = dirname($path);
-            
+
             // If parent path doesn't exist either, return false
             if (!file_exists($parent_path)) {
                 // We could recursively check parent paths here, but that might introduce
                 // security issues. Better to ensure parent directories exist first.
                 return false;
             }
-            
+
             // Validate the parent directory
             $parent_normalized_path = realpath($parent_path);
-            
+
             // Check if the parent path is in a restricted directory
             foreach ($restricted_dirs as $dir) {
                 $restricted_real_path = realpath($dir);
@@ -542,18 +564,18 @@ class File {
                     return false; // Parent path is inside a restricted directory
                 }
             }
-            
+
             // Prevent manipulation of any files or directories directly under APPPATH
             $parent_relative_path = str_replace(realpath(APPPATH), '', $parent_normalized_path);
             if (strpos($parent_relative_path, DIRECTORY_SEPARATOR) === false) {
                 return false; // Parent path is directly under the root directory
             }
-            
+
             // Ensure the parent path is within the application directory to avoid external access
             if (strpos($parent_normalized_path, realpath(APPPATH)) !== 0) {
                 return false;
             }
-            
+
             // The target path inherits validity from its parent
             return true;
         }
@@ -570,7 +592,8 @@ class File {
      * @throws InvalidArgumentException If the file does not exist.
      * @throws RuntimeException If the file exceeds memory requirements or fails MIME type validation.
      */
-    private function validate_file(string $filename): void {
+    private function validate_file(string $filename): void
+    {
         if (!file_exists($filename)) {
             throw new InvalidArgumentException("File not found: $filename");
         }
@@ -595,7 +618,8 @@ class File {
      * @return void
      * @throws InvalidArgumentException If a MIME type mismatch is detected.
      */
-    private function validate_mime_type(string $filename): void {
+    private function validate_mime_type(string $filename): void
+    {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filename);
         finfo_close($finfo);
@@ -629,9 +653,10 @@ class File {
      *               - 'status': (bool) Whether there is sufficient memory (true) or not (false).
      *               - 'message': (string) An error message if memory is insufficient (empty string otherwise).
      */
-    private function validate_memory_requirements(string $filename): array {
+    private function validate_memory_requirements(string $filename): array
+    {
         $result = ['status' => true, 'message' => ''];
-        
+
         if (!function_exists('memory_get_usage')) {
             return $result;
         }
@@ -647,7 +672,7 @@ class File {
         $needed_memory = $file_size * 2.1; // Buffer for processing
 
         $memory_available = $memory_limit - memory_get_usage();
-        
+
         if ($needed_memory > $memory_available) {
             return [
                 'status' => false,
@@ -667,8 +692,9 @@ class File {
      * @param int $error_code The file upload error code (e.g., UPLOAD_ERR_INI_SIZE).
      * @return string A user-friendly error message corresponding to the error code.
      */
-    private function get_upload_error_message(int $error_code): string {
-        return match($error_code) {
+    private function get_upload_error_message(int $error_code): string
+    {
+        return match ($error_code) {
             UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive',
             UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive',
             UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded',
@@ -686,11 +712,12 @@ class File {
      * @param string $memory_value The memory value with unit suffix
      * @return int The value in bytes
      */
-    private function convert_to_bytes(string $memory_value): int {
+    private function convert_to_bytes(string $memory_value): int
+    {
         $unit = strtolower(substr($memory_value, -1));
         $value = (int) substr($memory_value, 0, -1);
-        
-        return match($unit) {
+
+        return match ($unit) {
             'g' => $value * 1024 * 1024 * 1024,
             'm' => $value * 1024 * 1024,
             'k' => $value * 1024,
