@@ -427,8 +427,18 @@ class File {
     * @return void
     */
     private function validate_upload_path(string $destination, bool $upload_to_module = false, string $target_module = ''): void {
+
         if (empty($destination)) {
             throw new Exception('Upload destination not specified');
+        }
+
+        // When target module is a sub-folder IE 'accounts-comments'
+        // creates 'accounts/comments'
+        $module = $target_module;
+        if (strpos($module, '-') !== false) {
+            $target_module = str_replace('-', '/', $module);
+        } else {
+            $target_module = $module;
         }
 
         if ($upload_to_module === true) {
